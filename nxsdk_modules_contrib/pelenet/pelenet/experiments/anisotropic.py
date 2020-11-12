@@ -11,18 +11,16 @@ import lib.anisotropic.connectivity_landscape as cl
 from ..network import ReservoirNetwork
 from ._abstract import Experiment
 
-"""
-@desc: Class for running an experiment, usually contains performing
-       several networks (e.g. for training and testing)
-"""
-
 
 class AnisotropicExperiment(Experiment):
     """
-    # @desc: Define parameters for this experiment
-    # """
-
+    @desc: Class for running an experiment, usually contains performing
+           several networks (e.g. for training and testing)
+    """
     def defineParameters(self):
+        """
+        @desc: Define parameters for this experiment
+        """
         return {
             # Experiment
             'seed': 3,  # Random seed
@@ -53,12 +51,11 @@ class AnisotropicExperiment(Experiment):
             'isInSpikeProbe': True  # Probe inhibitory spikes
         }
 
-    """
-    @desc: Build network
-    """
-
     def build(self):
-        # Instanciate innate network
+        """
+        @desc: Build network
+        """
+        # Instantiate innate network
         self.net = ReservoirNetwork(self.p)
         self.net.landscape = None
 
