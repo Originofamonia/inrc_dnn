@@ -71,10 +71,10 @@ class AnisotropicReadoutExperiment(AnisotropicExperiment):
         self.drawMaskAndWeights()
 
         # Draw output weights
-        self.net.drawOutputMaskAndWeights(self)
+        self.net.drawOutputMaskAndWeights()
 
         # Connect ex-in reservoir
-        self.net.connectReservoir(self)
+        self.net.connectReservoir()
 
         # Connect reservoir to output
         self.net.connectOutput()
