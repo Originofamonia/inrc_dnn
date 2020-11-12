@@ -7,7 +7,7 @@ import warnings
 @desc: Singleton for util functions, like calculating more involved evaluations of data
 """
 @Singleton
-class Utils():
+class Utils:
 
     """
     @desc: Initiates plot object, gets relation to another object for getting the data
@@ -27,7 +27,7 @@ class Utils():
     """
     @desc: Parameters for utils can be changed manually
     """
-    def setParameters(self, parameters):
+    def set_parameters(self, parameters):
         # Manually set parameters
         self.p = parameters
 

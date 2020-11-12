@@ -15,11 +15,13 @@ from ._abstract import Experiment
 @desc: Class for running an experiment, usually contains performing
        several networks (e.g. for training and testing)
 """
-class AnisotropicExperiment(Experiment):
 
+
+class AnisotropicExperiment(Experiment):
     """
     # @desc: Define parameters for this experiment
     # """
+
     def defineParameters(self):
         return {
             # Experiment
@@ -27,7 +29,7 @@ class AnisotropicExperiment(Experiment):
             'trials': 1,  # Number of trials
             'stepsPerTrial': 600,  # Number of simulation steps for every trial
             # Network
-            'refractoryDelay': 2, # Refactory period
+            'refractoryDelay': 2,  # Refactory period
             'voltageTau': 10.24,  # Voltage time constant
             'currentTau': 10.78,  # Current time constant
             'thresholdMant': 1000,  # Spiking threshold for membrane potential
@@ -36,7 +38,7 @@ class AnisotropicExperiment(Experiment):
             'anisoStdE': 12,  # Space constant, std of gaussian for excitatory neurons
             'anisoStdI': 9,  # Space constant, std of gaussian for inhibitory neurons (range 9 - 11)
             'anisoShift': 1,  # Intensity of the shift of the connectivity distribution for a neuron
-            #'percShift': 1,  # Percentage of shift (default 1)
+            # 'percShift': 1,  # Percentage of shift (default 1)
             'anisoPerlinScale': 4,  # Perlin noise scale, high value => dense valleys, low value => broad valleys
             'weightExCoefficient': 12,  # Coefficient for excitatory anisotropic weight
             'weightInCoefficient': 48,  # Coefficient for inhibitory anisotropic weight
@@ -48,12 +50,13 @@ class AnisotropicExperiment(Experiment):
             'inputGenSpikeProb': 1.0,  # Spiking probability of the spike generators
             # Probes
             'isExSpikeProbe': True,  # Probe excitatory spikes
-            'isInSpikeProbe': True   # Probe inhibitory spikes
+            'isInSpikeProbe': True  # Probe inhibitory spikes
         }
-    
+
     """
     @desc: Build network
     """
+
     def build(self):
         # Instanciate innate network
         self.net = ReservoirNetwork(self.p)
@@ -81,6 +84,7 @@ class AnisotropicExperiment(Experiment):
     """
     @desc: Summary of some plots about the network
     """
+
     def plotSummary(self):
         # Plot histogram of weights and calc spectral radius
         self.net.plot.initialExWeightDistribution()
@@ -91,30 +95,32 @@ class AnisotropicExperiment(Experiment):
     """
     @desc: Draw mask and weights
     """
+
     def drawMaskAndWeights(self):
         # Draw and store mask matrix
         self.drawSparseAnisotropicMaskMatrix()
-        
+
         # Define and store weight matrix
         self.setSparseWeightMatrix()
 
     """
     @desc: Draw anisotropic mask matrix
     """
+
     def drawSparseAnisotropicMaskMatrix(self):
         # Get population sizes from parameters
         npopE = self.p.reservoirExSize
         npopI = self.p.reservoirInSize
 
         # Get numbber of columns and rows of network topology, calculated from population sizes
-        nrowE, ncolE = int(np.sqrt(npopE)), int(np.sqrt(npopE)) #120, 120
-        nrowI, ncolI = int(np.sqrt(npopI)), int(np.sqrt(npopI)) #60, 60
+        nrowE, ncolE = int(np.sqrt(npopE)), int(np.sqrt(npopE))  # 120, 120
+        nrowI, ncolI = int(np.sqrt(npopI)), int(np.sqrt(npopI))  # 60, 60
 
         # Predefine some parameter shorthands
         p = self.p.reservoirConnProb
         stdE = self.p.anisoStdE
         stdI = self.p.anisoStdI
-        
+
         # Directions
         move = cl.move(nrowE)
 
@@ -134,38 +140,37 @@ class AnisotropicExperiment(Experiment):
             source = idx, nrowE, ncolE, nrowE, ncolE, int(p * npopE), stdE
             targets, delay = lcrn.lcrn_gauss_targets(*source)
             if landscape[idx] != 0:  # asymmetry
-                #if np.random.rand() <= self.p.percShift:  # for perc_shift < 1, some are not shifted
+                # if np.random.rand() <= self.p.percShift:  # for perc_shift < 1, some are not shifted
                 #    targets = (targets + self.p.anisoShift * move[landscape[idx] % len(move)]) % npopE
-                #else:
+                # else:
                 #    not_shifted.append(idx)
                 targets = (targets + self.p.anisoShift * move[landscape[idx] % len(move)]) % npopE
             targets = targets[targets != idx]
-            
+
             # Set Loihi mask value
             ee[targets, idx] = 1
-            
+
             # E-> I
             source = idx, nrowE, ncolE, nrowI, ncolI, int(p * npopI), stdI
             targets, delay = lcrn.lcrn_gauss_targets(*source)
-            
+
             # Set Loihi mask value
             ei[targets, idx] = 1
-                        
+
         # inhibitory connections
         for idx in range(npopI):
-
             # I-> E
             source = idx, nrowI, ncolI, nrowE, ncolE, int(p * npopE), stdE
             targets, delay = lcrn.lcrn_gauss_targets(*source)
 
             # Set Loihi mask value
             ie[targets, idx] = 1
-            
+
             # I-> I
             source = idx, nrowI, ncolI, nrowI, ncolI, int(p * npopI), stdI
             targets, delay = lcrn.lcrn_gauss_targets(*source)
             targets = targets[targets != idx]
-            
+
             # Set Loihi mask value
             ii[targets, idx] = 1
 
@@ -179,15 +184,20 @@ class AnisotropicExperiment(Experiment):
         self.net.initialMasks.exin = sparse.csr_matrix(ei)
 
         # Log that weight matrix was generated
-        logging.info('Anisotropic weight matrix was succesfully drawn')
-    
+        logging.info('Anisotropic weight matrix was successfully drawn')
+
     """
     @desc: Set sparse weight matrix for anisotropic network
     """
+
     def setSparseWeightMatrix(self):
         # Set constant weights for excitatory and inhibitory neurons
         self.net.initialWeights.exex = self.p.weightExCoefficient * self.net.initialMasks.exex
-        self.net.initialWeights.inin = -self.p.weightInCoefficient * self.net.initialMasks.inin  # change sign of weights
-        self.net.initialWeights.inex = -self.p.weightInCoefficient * self.net.initialMasks.inex  # change sign of weights
+
+        # change sign of weights
+        self.net.initialWeights.inin = -self.p.weightInCoefficient * self.net.initialMasks.inin
+
+        # change sign of weights
+        self.net.initialWeights.inex = -self.p.weightInCoefficient * self.net.initialMasks.inex
+
         self.net.initialWeights.exin = self.p.weightExCoefficient * self.net.initialMasks.exin
-    

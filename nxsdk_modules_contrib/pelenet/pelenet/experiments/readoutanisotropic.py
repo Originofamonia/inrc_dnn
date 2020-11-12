@@ -7,14 +7,16 @@ from ._abstract import Experiment
 @desc: Class for running an experiment, usually contains performing
        several networks (e.g. for training and testing)
 """
-class AnisotropicReadoutExperiment(AnisotropicExperiment):
 
+
+class AnisotropicReadoutExperiment(AnisotropicExperiment):
     """
     # @desc: Define parameters for this experiment
     # """
+
     def defineParameters(self):
         # Parent parameters
-        aniP = super().defineParameters()
+        aniP = super(AnisotropicReadoutExperiment, self).defineParameters()
 
         expP = {
             # Experiment
@@ -23,7 +25,7 @@ class AnisotropicReadoutExperiment(AnisotropicExperiment):
             'stepsPerTrial': 110,  # Number of simulation steps for every trial
             'isReset': True,  # Activate reset after every trial
             # Network
-            'refractoryDelay': 2, # Refactory period
+            'refractoryDelay': 2,  # Refactory period
             'voltageTau': 10.24,  # Voltage time constant
             'currentTau': 10.78,  # Current time constant
             'thresholdMant': 1000,  # Spiking threshold for membrane potential
@@ -32,7 +34,7 @@ class AnisotropicReadoutExperiment(AnisotropicExperiment):
             'anisoStdE': 12,  # Space constant, std of gaussian for excitatory neurons
             'anisoStdI': 9,  # Space constant, std of gaussian for inhibitory neurons (range 9 - 11)
             'anisoShift': 1,  # Intensity of the shift of the connectivity distribution for a neuron
-            #'percShift': 1,  # Percentage of shift (default 1)
+            # 'percShift': 1,  # Percentage of shift (default 1)
             'anisoPerlinScale': 4,  # Perlin noise scale, high value => dense valleys, low value => broad valleys
             'weightExCoefficient': 12,  # Coefficient for excitatory anisotropic weight
             'weightInCoefficient': 48,  # Coefficient for inhibitory anisotropic weight
@@ -43,22 +45,23 @@ class AnisotropicReadoutExperiment(AnisotropicExperiment):
             'patchNeuronsShiftY': 24,  # y-position of the input area
             'inputNumTargetNeurons': 25,  # Number of target neurons for the input
             'inputSteps': 5,  # Number of steps the network is activated by the input
-            'inputWeightExponent': 0,    # The weight exponent of the weights from the generator to the target neurons
+            'inputWeightExponent': 0,  # The weight exponent of the weights from the generator to the target neurons
             'inputGenSpikeProb': 1.0,  # Spiking probability of the spike generators
             # Output
-            'partitioningClusterSize': 10, # Size of clusters connected to an output neuron (6|10)
+            'partitioningClusterSize': 10,  # Size of clusters connected to an output neuron (6|10)
             # Probes
             'isExSpikeProbe': True,  # Probe excitatory spikes
-            'isInSpikeProbe': True,   # Probe inhibitory spikes
-            'isOutSpikeProbe': True   # Probe output spikes
+            'isInSpikeProbe': True,  # Probe inhibitory spikes
+            'isOutSpikeProbe': True  # Probe output spikes
         }
 
         # Experiment parameters overwrite parameters from parent experiment
-        return { **aniP, **expP }
-    
+        return {**aniP, **expP}
+
     """
     @desc: Build all networks
     """
+
     def build(self):
         # Instanciate innate network
         self.net = ReservoirNetwork(self.p)
@@ -68,10 +71,10 @@ class AnisotropicReadoutExperiment(AnisotropicExperiment):
         self.drawMaskAndWeights()
 
         # Draw output weights
-        self.net.drawOutputMaskAndWeights()
+        self.net.drawOutputMaskAndWeights(self)
 
         # Connect ex-in reservoir
-        self.net.connectReservoir()
+        self.net.connectReservoir(self)
 
         # Connect reservoir to output
         self.net.connectOutput()

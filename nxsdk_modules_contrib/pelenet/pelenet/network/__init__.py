@@ -11,11 +11,13 @@ from ..parameters import Parameters
 """
 @desc: Reservoir network
 """
-class ReservoirNetwork():
 
+
+class ReservoirNetwork:
     """
     @desc: Initiates the innate network
     """
+
     def __init__(self, parameters=None):
         # Get parameters
         self.p = Parameters() if parameters is None else parameters
@@ -24,7 +26,7 @@ class ReservoirNetwork():
         if self.p.seed is not None:
             np.random.seed(self.p.seed)
 
-        # Instanciate nx net object
+        # Instantiate nx net object
         self.nxNet = nx.NxNet()
 
         # Excitatory connection prototype
@@ -38,10 +40,12 @@ class ReservoirNetwork():
         # Mixed connection prototype
         self.mixedConnProto = nx.ConnectionPrototype(signMode=nx.SYNAPSE_SIGN_MODE.MIXED,
                                                      weightExponent=self.p.weightExponent, numTagBits=self.p.numTagBits,
-                                                     numDelayBits=self.p.numDelayBits, numWeightBits=self.p.numWeightBits)
+                                                     numDelayBits=self.p.numDelayBits,
+                                                     numWeightBits=self.p.numWeightBits)
         # Generator connection prototype
         self.genConnProto = nx.ConnectionPrototype(signMode=nx.SYNAPSE_SIGN_MODE.EXCITATORY,
-                                                   weightExponent=self.p.inputWeightExponent, numTagBits=self.p.numTagBits,
+                                                   weightExponent=self.p.inputWeightExponent,
+                                                   numTagBits=self.p.numTagBits,
                                                    numDelayBits=self.p.numDelayBits, numWeightBits=self.p.numWeightBits)
 
         """
@@ -108,7 +112,7 @@ class ReservoirNetwork():
         # Instantiate utils and plot
         self.utils = Utils.instance()
         self.plot = Plot(self)
-    
+
     # """
     # @desc: Run the network
     # """
