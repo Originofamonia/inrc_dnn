@@ -4,8 +4,10 @@
         - https://stackoverflow.com/a/7346105/2692283
         - https://realpython.com/primer-on-python-decorators/#creating-singletons
 """
+
+
 class Singleton:
-    
+
     def __init__(self, decoratedClass):
         # Instance does initially not exist
         self._instance = None
