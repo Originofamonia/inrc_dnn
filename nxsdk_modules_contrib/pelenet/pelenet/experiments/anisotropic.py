@@ -81,33 +81,30 @@ class AnisotropicExperiment(Experiment):
     #     # Run network
     #     self.net.run()
 
-    """
-    @desc: Summary of some plots about the network
-    """
-
     def plotSummary(self):
+        """
+        @desc: Summary of some plots about the network
+        """
         # Plot histogram of weights and calc spectral radius
         self.net.plot.initialExWeightDistribution()
 
         # Plot weight matrix
         self.net.plot.initialExWeightMatrix()
 
-    """
-    @desc: Draw mask and weights
-    """
-
     def drawMaskAndWeights(self):
+        """
+        @desc: Draw mask and weights
+        """
         # Draw and store mask matrix
         self.drawSparseAnisotropicMaskMatrix()
 
         # Define and store weight matrix
         self.setSparseWeightMatrix()
 
-    """
-    @desc: Draw anisotropic mask matrix
-    """
-
     def drawSparseAnisotropicMaskMatrix(self):
+        """
+        @desc: Draw anisotropic mask matrix
+        """
         # Get population sizes from parameters
         npopE = self.p.reservoirExSize
         npopI = self.p.reservoirInSize
@@ -186,11 +183,10 @@ class AnisotropicExperiment(Experiment):
         # Log that weight matrix was generated
         logging.info('Anisotropic weight matrix was successfully drawn')
 
-    """
-    @desc: Set sparse weight matrix for anisotropic network
-    """
-
     def setSparseWeightMatrix(self):
+        """
+        @desc: Set sparse weight matrix for anisotropic network
+        """
         # Set constant weights for excitatory and inhibitory neurons
         self.net.initialWeights.exex = self.p.weightExCoefficient * self.net.initialMasks.exex
 
