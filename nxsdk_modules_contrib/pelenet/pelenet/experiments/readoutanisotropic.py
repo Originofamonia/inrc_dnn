@@ -1,20 +1,18 @@
 # Pelenet modules
 from .anisotropic import AnisotropicExperiment
 from ..network import ReservoirNetwork
-from ._abstract import Experiment
-
-"""
-@desc: Class for running an experiment, usually contains performing
-       several networks (e.g. for training and testing)
-"""
+# from ._abstract import Experiment
 
 
 class AnisotropicReadoutExperiment(AnisotropicExperiment):
     """
-    # @desc: Define parameters for this experiment
-    # """
-
+    @desc: Class for running an experiment, usually contains performing
+           several networks (e.g. for training and testing)
+    """
     def defineParameters(self):
+        """
+        @desc: Define parameters for this experiment
+        """
         # Parent parameters
         aniP = super(AnisotropicReadoutExperiment, self).defineParameters()
 
@@ -58,12 +56,11 @@ class AnisotropicReadoutExperiment(AnisotropicExperiment):
         # Experiment parameters overwrite parameters from parent experiment
         return {**aniP, **expP}
 
-    """
-    @desc: Build all networks
-    """
-
     def build(self):
-        # Instanciate innate network
+        """
+        @desc: Build all networks
+        """
+        # Instantiate innate network
         self.net = ReservoirNetwork(self.p)
         self.net.landscape = None
 

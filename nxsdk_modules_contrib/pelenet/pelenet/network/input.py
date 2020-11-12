@@ -106,15 +106,15 @@ def addInputSingle(self, input_spike_indices=None, target_neuron_indices=None):
     if input_spike_indices is None:
         input_spike_indices = []
     self.inputTargetNeurons = target_neuron_indices if len(target_neuron_indices) else getTargetNeurons(self)
-    print('self.inputTargetNeurons: {}'.format(self.inputTargetNeurons))
+    # [  0   1   2   3   4  60  61  62  63  64 120 121 122 123 124 180 181 182 183 184 240 241 242 243 244]
+    # print('self.inputTargetNeurons: {}'.format(self.inputTargetNeurons))
 
     # Get number of generators
     num_gens = len(self.inputTargetNeurons)
-    # print('num_gens: {}'.format(num_gens))
 
     # Create spike generator
     sg = self.nxNet.createSpikeGenProcess(numPorts=num_gens)
-    # print('sg: {}'.format(sg))
+    print(sg)
 
     # Draw spikes for input generators if not already given
     self.inputSpikes = input_spike_indices if len(input_spike_indices) else drawSpikesForAllGenerators(self,
