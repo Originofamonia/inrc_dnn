@@ -84,6 +84,7 @@ def main():
 
     # Build the network, in this function the weight matrix, inputs, probes, etc. are defined and created
     exp.build()
+    # return
 
     # Run the network simulation, afterwards the probes are postprocessed to nice arrays
     exp.run()
